@@ -144,7 +144,7 @@
     /* ── Buttons area ── */
     .buttons-area {
       width: 100%;
-      padding: 0 24px clamp(24px, 4vh, 36px);
+      padding: 0 24px clamp(30px, 5vh, 44px);
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -164,6 +164,7 @@
       font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
       font-size: 16px;
       font-weight: 500;
+      line-height: 1;
       color: #000;
       cursor: pointer;
       border: 1px solid rgba(0,0,0,0.12);
@@ -187,6 +188,7 @@
       width: 18px;
       height: 22px;
       flex-shrink: 0;
+      transform: translateY(-1px);
     }
 
     /* ── Bottom buttons ── */
@@ -223,7 +225,7 @@
 
     @media (max-height: 700px) {
       .ghost-img { width: 112px; height: 112px; }
-      .buttons-area { padding-bottom: 22px; }
+      .buttons-area { padding-bottom: 28px; }
       .bottom-btn { height: 64px; }
       .btn-register {
         height: calc(64px + env(safe-area-inset-bottom, 0px));
