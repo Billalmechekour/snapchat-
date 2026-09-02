@@ -55,13 +55,13 @@
 
     .phone {
       width: 100%;
-      height: 100vh; /* sera corrigé par JS */
+      height: 100vh;
       background: #FFFC00;
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-bottom: 128px;
+      overflow: hidden;
     }
 
 
@@ -185,13 +185,11 @@
 
     /* ── Bottom buttons ── */
     .bottom-btns {
-      position: fixed;
+      width: 100%;
+      position: absolute;
       bottom: 0;
-      bottom: env(safe-area-inset-bottom, 0);
       left: 0;
       right: 0;
-      width: 100%;
-      z-index: 99;
     }
 
     .bottom-btn {
@@ -833,17 +831,14 @@
       regSubmit.classList.remove('active');
     }, 1500);
   });
-  // ── Fix hauteur réelle pour WhatsApp / in-app browsers ──
+
+  // Fix hauteur réelle (WhatsApp / in-app browsers)
   function fixHeight() {
-    const h = window.innerHeight;
-    document.querySelector('.phone').style.height = h + 'px';
-    document.querySelector('.phone').style.minHeight = h + 'px';
+    document.querySelector('.phone').style.height = window.innerHeight + 'px';
   }
   fixHeight();
   window.addEventListener('resize', fixHeight);
-  window.addEventListener('orientationchange', function() {
-    setTimeout(fixHeight, 300);
-  });
+  document.addEventListener('DOMContentLoaded', fixHeight);
 </script>
 
 </body>
