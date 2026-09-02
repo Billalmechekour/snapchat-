@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Snapchat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     @font-face {
       font-family: 'Snapchat Avenir';
@@ -43,20 +46,17 @@
       margin: 0;
       padding: 0;
       background: #FFFC00;
-      font-family: 'Snapchat Avenir', 'Avenir Next', 'Avenir', sans-serif;
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', 'Outfit', sans-serif;
       overflow: hidden;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeSpeed;
     }
 
     body, body * {
-      font-family: 'Snapchat Avenir', 'Avenir Next', 'Avenir', sans-serif !important;
+      font-family: 'Snapchat Avenir', 'Avenir Next', 'Avenir', 'Outfit', sans-serif !important;
     }
 
     .phone {
       width: 100%;
-      height: 100%;
-      min-height: 100dvh;
+      height: 100dvh;
       background: #FFFC00;
       position: relative;
       overflow: hidden;
@@ -187,7 +187,7 @@
     /* ── Bottom buttons ── */
     .bottom-btns {
       width: 100%;
-      margin-top: 24px;
+      margin-top: auto;
     }
 
     .bottom-btn {
@@ -211,6 +211,15 @@
     }
     .btn-register {
       background: #00C0F0;
+    }
+
+    /* Police fallback universelle */
+    .social-btn, .bottom-btn, .login-title, .login-field label,
+    .login-field input, .forgot-link a, .login-submit-btn,
+    .login-or-text, .login-social-btn, .login-checkbox-row label,
+    .reg-title, .reg-step, .reg-field label, .reg-field input,
+    .reg-legal-text, .reg-submit-btn {
+      font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', 'Outfit', sans-serif;
     }
 
     /* ══════════════════════════════
